@@ -10,7 +10,7 @@ Claude Project for Assited creation of Skills and Agents.  Modes: --skill , --ag
 
 ### GITHUB CONNECTOR IS NOT AVAILABLE
 1. Go to a folder Claude can acces to in your local machine
-2. Open the cmd on that directory and run ``` git clone  ```
+2. Open the cmd on that directory and run ``` git clone https://github.com/gemedos/SKILLS-AND-AGENTS.git ```
 3. Create a new Claude Project and paste the pointer instructions underneath into its instructions box.
 4. Add the repo’s knowledge folder as the project’s Context .
 5. Test it by starting a chat with --skill or --agent.
