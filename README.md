@@ -2,7 +2,7 @@
 Claude Project for Assited creation of Skills and Agents.  Modes: --skill , --agent , --EcoSys, --help
 
 ## HOW TO SETUP
-1. Create a new Claude Project and paste the pointer instructions above into its instructions box.
+1. Create a new Claude Project and paste the pointer instructions underneath into its instructions box.
 2. Connect GitHub to Claude with your own GitHub account, then add the repo’s knowledge folder to the project’s knowledge.
 3. Test it by starting a chat with --skill or --agent.
 4. Resync whenever the owner announces an update.
