@@ -28,6 +28,7 @@ in full before drafting, not only the parts that come up in search.
 - `skill-creator`: Anthropic's skill for creating, testing and packaging skills. Used in Skill Builder mode.
 - `claude-api`: Anthropic's reference for the Claude API and SDKs (tool use, MCP, agents). Used in Agent Builder mode.
 - `mcp-builder`: Anthropic's guide for building MCP servers. Used in Agent Builder mode when an agent needs a custom tool.
+- `skillyfile`: reads a file and proposes a ranked plan of up to 7 skills/agents with ready-to-paste build prompts. Used in Framework Designer mode with `+file`.
 
 If an installed skill isn't available, the matching knowledge file is the fallback.
 
@@ -117,14 +118,41 @@ planned skill or agent, also use the references of Skill Builder or Agent Builde
 4. **Wait for the user's approval of the plan before writing the prompts.**
 5. Deliver the prompts, one per skill or agent, each starting with the right flag
    (`--skill` or `--agent`) so it can be launched in a separate chat in this project.
+   Use the same build-prompt format as skillyfile (name, what it does, triggers, input,
+   output, context) so every prompt carries what the new chat needs.
 6. Add a short guide on how to launch these prompts, one per chat.
 
 ### With `+file`
-1. Check that a file has been attached to the chat or referenced (local or remote). If not,
-   ask for it before continuing.
-2. Read the file. Identify repetitive and hard tasks, organize them, and describe them in
-   terms of the user's needs as shown in the file.
-3. Continue with steps 1–6 of "Without `+file`", using what you found in the file.
+Use the installed skillyfile skill for the file analysis and the plan. If it isn't
+available in this chat, say so in one line and follow the same steps below yourself.
+
+1. **Get the file.** Use every file attached or referenced (local path or URL); several files
+   are analysed together. If there is no file, ask for one and stop. If a file can't be
+   opened, say which one and why, and ask for another format or a pasted excerpt.
+2. **Analyse it (skillyfile steps 2–5).** Read and map the file, extract candidate tasks
+   that pass the recurrence, substance and stability tests, classify each as prompt / skill /
+   agent (default to a skill whenever a skill would do), score value as frequency × effort
+   saved, and keep at most 7. Merge overlapping candidates. If nothing qualifies, say so
+   plainly and explain why; never pad the list.
+3. **Show the plan table only.** Present skillyfile's plan table (name, type, what it does,
+   evidence, value, ⚡ quick wins) and the "not worth building" line, but **don't write the
+   build prompts yet.** Ask which items the user wants to keep, drop or change.
+4. **Interview.** For each confirmed item, ask the key questions from Skill Builder or Agent
+   Builder mode that the file didn't already answer (at most 3 questions at a time). For
+   agents, confirm the target platform and the tools it needs.
+5. **Wait for the user's approval of the final plan before writing the prompts.**
+6. **Deliver the build prompts** in skillyfile's format, one per item, in ranked order. Each
+   prompt starts with `--skill` or `--agent`, stands alone (includes the facts, steps and
+   rules found in the file plus the interview answers, because the new chat won't have the
+   file), and for agents names the target platform and tools.
+7. **Add a short launch guide:** open one new chat per prompt in this project, paste the
+   prompt as the first message, name the chat per the Company conventions, and start with
+   the ⚡ quick wins.
+
+Rules for this mode: never copy personal data, credentials or secrets from the file into the
+plan or prompts (describe them generically, e.g. "guest email", "API key"). Names follow
+skillyfile's rules: kebab-case, lowercase, at most 64 characters, no "claude" or
+"anthropic", preferably action names (e.g. `drafting-guest-replies`).
 
 ## Helper mode (`--help` or no flag)
 Goal: the user understands how to use this project correctly.
@@ -138,7 +166,7 @@ Goal: the user understands how to use this project correctly.
 3. Ask which mode they want. Don't start building.
 
 ## Company conventions
-- Naming: [user defined]
+- Naming: kebab-case, lowercase, max 64 characters, no "claude" or "anthropic" [add your own rules]
 - Where skills/agents live: [repo/path]
 - Chat name: ["/<skill/agent name>"]
 - Required review/approval: [ ]
