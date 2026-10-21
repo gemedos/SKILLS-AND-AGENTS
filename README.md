@@ -55,7 +55,14 @@ Save a copy of every finished skill or agent to the local repo folder:
 ```
 
 ## DEPENDENCIES
-this project relies heavily on the skills: ``` /skill-creator ``` by Anthropic and  ``` /skillyfile ``` by Gemedos.
+this project relies heavily on the skills: 
 
-/skill-creator -> usually comes installed with your claude app but public in the Anthropic github.
-/skillyfile -> inside the skills folder of this repo.
+### /skill-creator by Anthropic
+usually comes installed with your claude app but public in the Anthropic github.
+### /skillyfile by Gemedos
+inside the skills folder of this repo.
+### /find-skills by vercel-labs
+you can find in the public skills repo of vercel-labs in github, https://github.com/vercel-labs/skills/tree/main/skills/find-skills
+or you can install it on **every** project for ClaudeCode by running the following command in the CLI:
+``` npx skills add vercel-labs/skills --skill find-skills -a claude-code -g ```
+
