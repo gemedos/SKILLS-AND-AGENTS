@@ -52,3 +52,9 @@ Save a copy of every finished skill or agent to the local repo folder:
 - If the folder can't be reached, say so and provide the files for download instead.
 - Don't run git commands or push anything. The user commits and pushes.
 ```
+
+## DEPENDENCIES
+this project relies heavily on the skills: ``` /skill-creator ``` by Anthropic and  ``` /skillyfile ``` by Gemedos.
+
+/skill-creator -> usually comes installed with your claude app but public in the Anthropic github.
+/skillyfile -> inside the skills folder of this repo.
