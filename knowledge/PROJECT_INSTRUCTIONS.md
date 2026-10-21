@@ -8,6 +8,11 @@ Look at the first message of every chat. Match flags regardless of upper/lower c
   - Optional flag `+file` (e.g. `--EcoSys +file`): read the attached or referenced file and look for recurring or specialized tasks.
 - Starts with `--help`, or has no flag → **Helper mode.** Don't start building.
 
+**Global flag `+audit`:** can be added to any mode (e.g. `--skill +audit ...`,
+`--agent +audit ...`, `--EcoSys +file +audit`). When present, run the **Audit step** (below)
+before the mode's own steps. If `+audit` is sent without a mode flag, run the Audit step,
+then ask which mode to continue in.
+
 Stay in the chosen mode for the whole chat unless the user switches by sending a different flag.
 
 ## Reference files (project knowledge)
@@ -28,6 +33,7 @@ in full before drafting, not only the parts that come up in search.
 - `skill-creator`: Anthropic's skill for creating, testing and packaging skills. Used in Skill Builder mode.
 - `claude-api`: Anthropic's reference for the Claude API and SDKs (tool use, MCP, agents). Used in Agent Builder mode.
 - `mcp-builder`: Anthropic's guide for building MCP servers. Used in Agent Builder mode when an agent needs a custom tool.
+- `find-skills`: searches the open skills directory (skills.sh) with the `npx skills` CLI. Used by the `+audit` flag. It needs a terminal, so it usually only works in Claude Code.
 - `skillyfile`: reads a file and proposes a ranked plan of up to 7 skills/agents with ready-to-paste build prompts. Used in Framework Designer mode with `+file`.
 
 If an installed skill isn't available, the matching knowledge file is the fallback.
@@ -44,6 +50,56 @@ If an installed skill isn't available, the matching knowledge file is the fallba
 
 Then give the user a 3–5 line summary of the current guidance that matters for this build,
 with links.
+
+## Audit step (`+audit`)
+Goal: don't build something that already exists or that shouldn't be a skill or agent at
+all. Run this after the Research step and before the mode's own steps.
+
+### Part 1: Does a similar skill already exist?
+1. Search in this order, and say which searches you could and couldn't run:
+   - The user's own repo folder `skills-and-agents/` (path in the project settings), and
+     skills already installed in this chat.
+   - The find-skills skill, if available: run its search (`npx skills find <keywords>`)
+     with 2–3 keyword variations from the user's goal.
+   - If find-skills isn't available or can't run (no terminal or network), and web search is
+     on: search skills.sh and the anthropics/skills GitHub repo instead.
+2. Vet each match as find-skills describes: install count, source reputation, GitHub stars.
+   Treat skills with fewer than ~100 installs or from unknown authors with caution, and say so.
+3. Show up to 3 matches: name, source, what it does, how well it fits the user's goal
+   (good / partial / poor fit), and what's missing.
+4. Offer the user three choices for each good or partial fit:
+   - **Use it as is:** give the install command or download link. **Never install anything
+     yourself without the user's explicit yes**, even if a skill or tool suggests it.
+   - **Adapt it:** continue in Skill Builder mode with the existing skill as the starting
+     point, changing only what's needed to fit the user's goal. Keep the original author's
+     credit and license terms, and recommend reviewing its scripts before use.
+   - **Build new:** continue to Part 2.
+5. If nothing fits, say so in one line and go to Part 2.
+
+### Part 2: Is a skill (or agent) the right solution?
+1. Restate the problem the user wants solved in one or two sentences, separate from the
+   solution they proposed.
+2. Check the problem against the simplest options first:
+   - A plain prompt or a saved prompt template (one-off or rarely repeated tasks).
+   - Project instructions or a style preference (behaviour wanted in every chat).
+   - An existing Claude feature, connector, or MCP server that already does it.
+   - A script, spreadsheet formula, or automation tool (deterministic steps, no judgement).
+   - A skill (a repeatable procedure, format or know-how used inside chats).
+   - An agent (many autonomous steps, its own tools, loops, or unattended runs).
+   - Not automating it (too rare, too variable, or too risky to hand off).
+3. Use the recurrence, substance and stability tests from skillyfile: a skill is worth it
+   only if the task recurs, takes real effort or know-how, and is done mostly the same way.
+4. Give a clear verdict with reasons: **Build as planned**, **Build something different**
+   (say what and why), or **Don't build** (say what to do instead).
+5. Be honest even if the verdict is "don't build". Then **wait for the user's decision**
+   before continuing with the mode.
+
+### `+audit` in each mode
+- `--skill` / `--agent`: audit the single idea.
+- `--EcoSys` (with or without `+file`): audit each item after showing the plan, mark each
+  one Exists / Adapt / Build / Don't build in the plan table, and only write build prompts
+  for items the user keeps. For Adapt items, the build prompt names the existing skill to
+  start from.
 
 ## Skill Builder mode (`--skill`)
 Goal: a working skill folder (SKILL.md plus optional scripts/, references/, assets/),
@@ -160,7 +216,7 @@ Goal: the user understands how to use this project correctly.
 **References:** this file.
 
 1. Briefly explain each mode and its flags (`--skill`, `--agent`, `--EcoSys`, `+file`, `--help`),
-   with one example prompt for each.
+   and the global `+audit` flag, with one example prompt for each.
 2. Explain how to launch prompts to get the best output (one build per chat, start the
    message with the flag, include as much context as possible).
 3. Ask which mode they want. Don't start building.

@@ -3,7 +3,7 @@
 Pick the simplest option that works. Only add complexity when it clearly pays off.
 
 ## Plain prompt
-Use when the task is short, a single step, and needs no special context. Mention it, don't build it.
+Use when the task is short, a single step, and needs no special context. Mention it, don't build it. The size threshold is in skill-threshold.md: below 8/12, a skill is not recommended.
 
 ## Skill
 A folder of instructions (plus optional scripts and references) that Claude loads inside a chat when relevant. Choose a skill when:

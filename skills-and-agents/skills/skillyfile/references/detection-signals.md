@@ -15,7 +15,7 @@ Patterns that reveal complex, repetitive work in files, and how each pattern usu
 - CI/CD, infra & configs
 - Prompt libraries & AI chat logs
 - Calendars, decks & other files
-- Measuring frequency and effort
+- Measuring frequency and effort (evidence; scoring in skill-threshold.md)
 - False positives & disqualifiers
 
 ## The three tests
@@ -26,7 +26,7 @@ A candidate must pass all three:
 2. **Substance**: it has several steps, needs judgement, or depends on rules or know-how. One-step work is a plain prompt.
 3. **Stability**: the steps or rules stay mostly the same between runs. If each run is completely different, nothing reusable can be captured.
 
-Then classify:
+Then run the skill threshold (skill-threshold.md). Typical outcomes:
 
 | Pattern | Usual type |
 |---|---|
@@ -173,15 +173,10 @@ Treat any log with *case ID + activity + timestamp* as a process trace.
 
 ## Measuring frequency and effort
 
-Use these to fill in the scores in SKILL.md step 5. Quote the evidence.
-
-| Score | Frequency | Effort saved per run |
-|---|---|---|
-| 1 | Monthly or rarer, or under 10 instances | Under 5 minutes, few steps |
-| 2 | Weekly, or 10–100 instances | 5–30 minutes, or needs rules/know-how |
-| 3 | Daily or more, or over 100 instances | Over 30 minutes, many steps, or error-prone |
-
-If the file doesn't state a frequency, infer it from dates, row counts, or message counts, and say that it's an estimate.
+Scoring and the build/borderline/skip decision are in skill-threshold.md (criteria 4 and 5). How to find the evidence:
+- **Frequency:** dates and timestamps, rows per period, messages per intent cluster, commits per pattern. If the file doesn't state a frequency, infer it and mark the score as inferred.
+- **Effort:** number of steps, hand-filled columns per row, length of the procedure, corrections or back-and-forth in threads.
+- Quote the evidence in the plan ("33 of 70 commits", "≈40 rows/week").
 
 ## False positives & disqualifiers
 - **Repeated in the text, but not in practice:** a boilerplate header or signature isn't a task.
