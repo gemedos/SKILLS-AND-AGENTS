@@ -1,5 +1,5 @@
 # SKILLS-AGENTS
-Claude Project for Assited creation of Skills and Agents.  Modes: --skill , --agent , --EcoSys, --help
+Claude Project for Assited creation of Skills and Agents.  Modes: --skill , --agent , --EcoSys, --help. Flags: +file, +audit
 
 ## HOW TO SETUP
 ### GITHUB CONNECTOR IS AVAILABLE
@@ -25,6 +25,7 @@ Routing rule (backup in case the file isn't loaded):
 - --agent → Agent Builder mode
 - --EcoSys (optional +file) → Framework Designer mode
 - --help or no flag → Helper mode: explain the modes, don't build
+- +audit (global, works with any mode) → run the Audit step first
 ```
 
 ## HOW TO COPY A FINISHED SKILL OR AGENT
